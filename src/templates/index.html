@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Available Slots</h2>
+
+{% if slots %}
+<table>
+  <thead>
+    <tr><th>Faculty</th><th>Dept</th><th>Date</th><th>Time</th><th>Book</th></tr>
+  </thead>
+  <tbody>
+    {% for s in slots %}
+    <tr>
+      <td>{{ s.faculty_name }}</td>
+      <td>{{ s.department }}</td>
+      <td>{{ s.date }}</td>
+      <td>{{ s.start_time }} - {{ s.end_time }}</td>
+      <td>
+        <form method="post" action="{{ url_for('book') }}">
+          <input type="hidden" name="faculty" value="{{ s.faculty_name }}">
+          <input type="hidden" name="date" value="{{ s.date }}">
+          <input type="hidden" name="start_time" value="{{ s.start_time }}">
+          <input type="text" name="student_name" placeholder="Your name" required>
+          <input type="email" name="student_email" placeholder="Your email" required>
+          <button type="submit">Request</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No free slots available at the moment.</p>
+{% endif %}
+{% endblock %}

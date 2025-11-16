@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Add Faculty Slot</h2>
+
+<form method="post" action="{{ url_for('add_slot') }}">
+  <label>Faculty Name</label><br>
+  <input type="text" name="faculty_name" placeholder="Teacher1" required><br>
+
+  <label>Department</label><br>
+  <input type="text" name="department" required><br>
+
+  <label>Faculty Email</label><br>
+  <input type="email" name="faculty_email" required><br>
+
+  <label>Date</label><br>
+  <input type="date" name="date" required><br>
+
+  <label>Start Time</label><br>
+  <input type="time" name="start_time" required><br>
+
+  <label>End Time</label><br>
+  <input type="time" name="end_time" required><br><br>
+
+  <button type="submit">Add Slot</button>
+</form>
+
+{% endblock %}

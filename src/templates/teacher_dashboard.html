@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Teacher Dashboard — {{ teacher }}</h2>
+
+<div style="display:flex; gap: 20px;">
+  <div style="flex:2;">
+    <h3>Your Slots</h3>
+    {% if slots %}
+    <table>
+      <thead><tr><th>Dept</th><th>Date</th><th>Time</th><th>Status</th><th>Student</th></tr></thead>
+      <tbody>
+        {% for s in slots %}
+        <tr>
+          <td>{{ s.department }}</td>
+          <td>{{ s.date }}</td>
+          <td>{{ s.start_time }} - {{ s.end_time }}</td>
+          <td>{{ s.status }}</td>
+          <td>{{ s.student_name or '-' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>You have no slots yet.</p>
+    {% endif %}
+  </div>
+
+  <div style="flex:1;">
+    <h3>Pending Requests</h3>
+    {% if requests %}
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Date</th><th>Time</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for r in requests %}
+        <tr>
+          <td>{{ r.student_name }}</td>
+          <td>{{ r.student_email }}</td>
+          <td>{{ r.date }}</td>
+          <td>{{ r.start_time }}</td>
+          <td>
+            <a href="{{ url_for('teacher_approve', slot_id=r.slot_id) }}">Approve</a>
+            |
+            <a href="{{ url_for('teacher_reject', slot_id=r.slot_id) }}">Reject</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No pending requests.</p>
+    {% endif %}
+  </div>
+</div>
+
+<h3>Add a new slot</h3>
+<form method="post" action="{{ url_for('teacher_add_slot') }}">
+  <label>Department</label><br>
+  <input type="text" name="department" required><br>
+  <label>Faculty Email (optional)</label><br>
+  <input type="email" name="faculty_email"><br>
+  <label>Date</label><br>
+  <input type="date" name="date" required><br>
+  <label>Start Time</label><br>
+  <input type="time" name="start_time" required><br>
+  <label>End Time</label><br>
+  <input type="time" name="end_time" required><br><br>
+  <button type="submit">Add Slot</button>
+</form>
+
+{% endblock %}

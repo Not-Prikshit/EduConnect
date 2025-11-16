@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>EduConnect</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="{{ url_for('landing') }}">Home</a> |
+      <a href="{{ url_for('login') }}">Login</a>
+      {% if session.get('logged_in') %}
+        {% if session.get('role') == 'student' %}
+          | <a href="{{ url_for('student_dashboard') }}">Dashboard</a>
+        {% elif session.get('role') == 'teacher' %}
+          | <a href="{{ url_for('teacher_dashboard') }}">Dashboard</a>
+          | <a href="{{ url_for('teacher_add_slot') }}">Add Slot</a>
+        {% endif %}
+        | <a href="{{ url_for('logout') }}">Logout</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flash">
+          {% for m in messages %}
+            <li>{{ m }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>EduConnect — Pixel Pioneers</p>
+  </footer>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

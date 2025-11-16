@@ -1,0 +1,8 @@
+body { font-family: Arial, sans-serif; margin: 16px; color: #222; }
+nav a { margin-right: 12px; color: #0d6efd; text-decoration: none; }
+.flash { padding: 8px; background: #e6ffe6; border-left: 4px solid #28a745; }
+table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+table, th, td { border: 1px solid #ddd; }
+th, td { padding: 8px; text-align: left; }
+button { background: #0d6efd; color: white; border: none; padding: 6px 10px; cursor: pointer; border-radius: 4px; }
+input[type="text"], input[type="email"], input[type="date"], input[type="time"] { padding: 6px; margin: 4px 0; width: 90%; box-sizing: border-box; }

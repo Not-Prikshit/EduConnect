@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Welcome to EduConnect</h2>
+<p>Login as a student or teacher to continue.</p>
+
+<p><a href="{{ url_for('login') }}">Go to Login</a></p>
+
+<h3>Teachers (public list)</h3>
+<ul>
+  {% for f in faculty %}
+    <li><a href="{{ url_for('public_faculty', name=f) }}">{{ f }}</a></li>
+  {% else %}
+    <li>No teachers yet</li>
+  {% endfor %}
+</ul>
+{% endblock %}

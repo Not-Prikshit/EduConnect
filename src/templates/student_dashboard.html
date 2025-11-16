@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Student Dashboard</h2>
+<p>Welcome, {{ name }}</p>
+
+<div style="display:flex; gap: 20px;">
+  <div style="flex:2;">
+    <h3>Available Slots</h3>
+    {% if slots %}
+    <table>
+      <thead><tr><th>Teacher</th><th>Dept</th><th>Date</th><th>Time</th><th>Request</th></tr></thead>
+      <tbody>
+        {% for s in slots %}
+        <tr>
+          <td>{{ s.faculty_name }}</td>
+          <td>{{ s.department }}</td>
+          <td>{{ s.date }}</td>
+          <td>{{ s.start_time }} - {{ s.end_time }}</td>
+          <td>
+            <form method="post" action="{{ url_for('student_book') }}">
+              <input type="hidden" name="faculty" value="{{ s.faculty_name }}">
+              <input type="hidden" name="date" value="{{ s.date }}">
+              <input type="hidden" name="start_time" value="{{ s.start_time }}">
+              <button type="submit">Request</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No free slots available.</p>
+    {% endif %}
+  </div>
+
+  <div style="flex:1;">
+    <h3>Your Bookings</h3>
+    {% if pending %}
+      <ul>
+        {% for p in pending %}
+          <li>{{ p.faculty_name }} — {{ p.date }} {{ p.start_time }} — {{ p.status }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No upcoming or pending bookings.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
