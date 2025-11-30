@@ -1,0 +1,89 @@
+/* Glassmorphism & Neumorphism Utilities */
+.glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.glass-dark {
+    background: rgba(17, 24, 39, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.neumorph {
+    background: #f3f4f6;
+    box-shadow: 5px 5px 10px #d1d5db, -5px -5px 10px #ffffff;
+}
+
+.neumorph-dark {
+    background: #1f2937;
+    box-shadow: 5px 5px 10px #111827, -5px -5px 10px #374151;
+}
+
+/* Animations */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
+
+/* 3D Button Effect */
+.btn-3d {
+    transition: all 0.1s;
+    box-shadow: 0px 4px 0px 0px rgba(0, 0, 0, 0.2);
+}
+
+.btn-3d:active {
+    transform: translateY(4px);
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2);
+}

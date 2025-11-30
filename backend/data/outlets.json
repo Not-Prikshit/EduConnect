@@ -1,0 +1,52 @@
+[
+    {
+        "id": "outlet_001",
+        "name": "Snap-its",
+        "menu": [
+            "Chips",
+            "Chocolates",
+            "Sandwiches",
+            "Cold Drinks",
+            "Coffee"
+        ],
+        "timings": "9:00 AM – 11:00 PM",
+        "location": "Main Block, Ground Floor"
+    },
+    {
+        "id": "outlet_002",
+        "name": "Canteen",
+        "menu": [
+            "Thali",
+            "Fried Rice",
+            "Noodles",
+            "Paratha",
+            "Tea"
+        ],
+        "timings": "8:00 AM – 9:30 PM",
+        "location": "Cafeteria Block"
+    },
+    {
+        "id": "outlet_003",
+        "name": "Juice Corner",
+        "menu": [
+            "Fresh Fruit Juice",
+            "Shakes",
+            "Fruit Salad"
+        ],
+        "timings": "10:00 AM – 10:00 PM",
+        "location": "Sports Complex"
+    },
+    {
+        "id": "outlet_004",
+        "name": "Stationery Shop",
+        "menu": [
+            "Notebooks",
+            "Pens",
+            "Printouts",
+            "Files",
+            "Art Supplies"
+        ],
+        "timings": "9:00 AM – 8:00 PM",
+        "location": "Library Block"
+    }
+]

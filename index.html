@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/microsoft-ui.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#a855f7',
+                        dark: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body
+    class="min-h-screen flex items-center justify-center p-4 text-white overflow-hidden relative bg-cover bg-center bg-no-repeat"
+    style="background-image: url('images/login-bg.jpg');">
+    <!-- Dark Overlay -->
+    <div class="absolute inset-0 bg-slate-900/[0.11] z-0"></div>
+
+    <!-- VIEW 1: Role Selection Landing Page -->
+    <div id="role-selection-view"
+        class="glass-dark p-8 rounded-2xl shadow-2xl w-full max-w-4xl z-10 relative fade-in border border-white/10">
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-blue-300 mb-4">
+                EduConnect
+            </h1>
+            <p class="text-xl text-slate-300">Select your role to continue</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Student Card -->
+            <button onclick="showAuthView('student')"
+                class="group relative p-6 bg-slate-800/50 hover:bg-indigo-600/20 border border-slate-700 hover:border-indigo-500 rounded-xl transition-all duration-300 text-center">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform">🎓</div>
+                <h3 class="text-2xl font-bold text-white mb-2">Student</h3>
+                <p class="text-slate-400 text-sm">Access your marks, timetable, and clubs.</p>
+            </button>
+
+            <!-- Teacher Card -->
+            <button onclick="showAuthView('teacher')"
+                class="group relative p-6 bg-slate-800/50 hover:bg-purple-600/20 border border-slate-700 hover:border-purple-500 rounded-xl transition-all duration-300 text-center">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform">👨‍🏫</div>
+                <h3 class="text-2xl font-bold text-white mb-2">Teacher</h3>
+                <p class="text-slate-400 text-sm">Manage classes, marks, and profile.</p>
+            </button>
+
+            <!-- Admin Card -->
+            <button onclick="showAuthView('admin')"
+                class="group relative p-6 bg-slate-800/50 hover:bg-rose-600/20 border border-slate-700 hover:border-rose-500 rounded-xl transition-all duration-300 text-center">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform">🛡️</div>
+                <h3 class="text-2xl font-bold text-white mb-2">Admin</h3>
+                <p class="text-slate-400 text-sm">System administration and oversight.</p>
+            </button>
+        </div>
+    </div>
+
+    <!-- VIEW 2: Auth Forms (Hidden by default) -->
+    <div id="auth-view"
+        class="hidden glass-dark p-8 rounded-2xl shadow-2xl w-full max-w-md z-10 relative fade-in border border-white/10">
+        <button onclick="showRoleSelection()"
+            class="text-slate-400 hover:text-white mb-6 flex items-center gap-2 transition-colors">
+            ← Back to Roles
+        </button>
+
+        <div class="text-center mb-8">
+            <h2 id="auth-title" class="text-3xl font-bold text-white mb-2">Login</h2>
+            <p id="auth-subtitle" class="text-slate-400">Welcome back</p>
+        </div>
+
+        <!-- Error Message -->
+        <p id="error-msg"
+            class="text-red-500 text-center mb-4 hidden bg-red-500/10 p-2 rounded-lg border border-red-500/20"></p>
+
+        <!-- Toggle Login/Signup (Only for Student/Teacher) -->
+        <div id="auth-toggle" class="flex mb-6 bg-slate-800/50 rounded-lg p-1">
+            <button onclick="toggleAuthMode('login')" id="btn-login"
+                class="flex-1 py-2 rounded-md text-sm font-medium transition-all bg-indigo-600 text-white shadow-lg">Login</button>
+            <button onclick="toggleAuthMode('signup')" id="btn-signup"
+                class="flex-1 py-2 rounded-md text-sm font-medium transition-all text-slate-400 hover:text-white">Sign
+                Up</button>
+        </div>
+
+        <!-- Forms Container -->
+        <div id="forms-container">
+        </div>
+    </div>
+
+    <script>
+        let currentRole = '';
+        let currentMode = 'login';
+
+        function showRoleSelection() {
+            document.getElementById('role-selection-view').classList.remove('hidden');
+            document.getElementById('auth-view').classList.add('hidden');
+            document.getElementById('error-msg').classList.add('hidden');
+        }
+
+        function showAuthView(role) {
+            currentRole = role;
+            currentMode = 'login'; // Reset to login
+
+            document.getElementById('role-selection-view').classList.add('hidden');
+            document.getElementById('auth-view').classList.remove('hidden');
+
+            // Admin doesn't have signup
+            const toggle = document.getElementById('auth-toggle');
+            if (role === 'admin') {
+                toggle.classList.add('hidden');
+            } else {
+                toggle.classList.remove('hidden');
+            }
+
+            renderForm();
+        }
+
+        function toggleAuthMode(mode) {
+            currentMode = mode;
+            renderForm();
+        }
+
+        function renderForm() {
+            const container = document.getElementById('forms-container');
+            const btnLogin = document.getElementById('btn-login');
+            const btnSignup = document.getElementById('btn-signup');
+            const title = document.getElementById('auth-title');
+            const subtitle = document.getElementById('auth-subtitle');
+
+            // Update Toggle UI
+            if (currentMode === 'login') {
+                btnLogin.classList.add('bg-indigo-600', 'text-white', 'shadow-lg');
+                btnLogin.classList.remove('text-slate-400');
+                btnSignup.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg');
+                btnSignup.classList.add('text-slate-400');
+                title.textContent = `${currentRole.charAt(0).toUpperCase() + currentRole.slice(1)} Login`;
+                subtitle.textContent = "Welcome back! Please login to continue.";
+            } else {
+                btnSignup.classList.add('bg-indigo-600', 'text-white', 'shadow-lg');
+                btnSignup.classList.remove('text-slate-400');
+                btnLogin.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg');
+                btnLogin.classList.add('text-slate-400');
+                title.textContent = `New ${currentRole.charAt(0).toUpperCase() + currentRole.slice(1)}`;
+                subtitle.textContent = "Create your account to get started.";
+            }
+
+            // Render Form Fields
+            let html = '';
+            if (currentRole === 'admin') {
+                html = `
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Admin Name</label>
+                    <input type="text" id="a-name"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="Enter name">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Secret Admin ID</label>
+                    <input type="password" id="a-id"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="Enter secret ID">
+                </div>
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-rose-600 to-orange-600 hover:from-rose-500 hover:to-orange-500 text-white font-semibold py-3 rounded-lg shadow-lg transition-all mt-2">Login
+                    as Admin</button>
+            </form>
+            `;
+            } else if (currentRole === 'student') {
+                if (currentMode === 'login') {
+                    html = `
+            <form onsubmit="handleStudentLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Student ID (Email)</label>
+                    <input type="text" id="s-id"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="e.g. S123 or name@bennett.edu.in">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Student Name</label>
+                    <input type="text" id="s-name"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="Enter your name">
+                </div>
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-3 rounded-lg shadow-lg transition-all mt-2">Login</button>
+            </form>
+            `;
+                } else {
+                    html = `
+            <form onsubmit="handleStudentSignup(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+                    <input type="text" id="s-signup-name"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="Enter full name" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Student ID (Email)</label>
+                    <input type="text" id="s-signup-id"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="e.g. name@bennett.edu.in" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Year</label>
+                    <select id="s-signup-year"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none">
+                        <option>1st Year</option>
+                        <option>2nd Year</option>
+                        <option>3rd Year</option>
+                        <option>4th Year</option>
+                    </select>
+                </div>
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-3 rounded-lg shadow-lg transition-all mt-2">Sign
+                    Up</button>
+            </form>
+            `;
+                }
+            } else if (currentRole === 'teacher') {
+                if (currentMode === 'login') {
+                    html = `
+            <form onsubmit="handleTeacherLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Teacher ID (Email)</label>
+                    <input type="text" id="t-id"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="e.g. T123 or name@bennett.edu.in">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Teacher Name</label>
+                    <input type="text" id="t-name"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="Enter your name">
+                </div>
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-3 rounded-lg shadow-lg transition-all mt-2">Login</button>
+            </form>
+            `;
+                } else {
+                    html = `
+            <form onsubmit="handleTeacherSignup(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+                    <input type="text" id="t-signup-name"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="Enter full name" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Teacher ID</label>
+                    <input type="text" id="t-signup-id"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="e.g. T123" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Subject</label>
+                    <input type="text" id="t-signup-subject"
+                        class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none"
+                        placeholder="e.g. Mathematics" required>
+                </div>
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold py-3 rounded-lg shadow-lg transition-all mt-2">Sign
+                    Up</button>
+            </form>
+            `;
+                }
+            }
+            container.innerHTML = html;
+        }
+
+        // Handlers
+        async function handleStudentLogin(e) {
+            e.preventDefault();
+            const id = document.getElementById('s-id').value;
+            const name = document.getElementById('s-name').value;
+            const result = await loginStudent(id, name);
+            handleResult(result);
+        }
+
+        async function handleStudentSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('s-signup-name').value;
+            const id = document.getElementById('s-signup-id').value;
+            const year = document.getElementById('s-signup-year').value;
+            const result = await signupStudent(name, id, year);
+            handleResult(result);
+        }
+
+        async function handleTeacherLogin(e) {
+            e.preventDefault();
+            const id = document.getElementById('t-id').value;
+            const name = document.getElementById('t-name').value;
+            const result = await loginTeacher(id, name);
+            handleResult(result);
+        }
+
+        async function handleTeacherSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('t-signup-name').value;
+            const id = document.getElementById('t-signup-id').value;
+            const subject = document.getElementById('t-signup-subject').value;
+            const result = await signupTeacher(name, id, subject);
+            handleResult(result);
+        }
+
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('a-name').value;
+            const id = document.getElementById('a-id').value;
+            const result = await loginAdmin(id, name);
+            handleResult(result);
+        }
+
+        function handleResult(result) {
+            const errorEl = document.getElementById('error-msg');
+            if (result.success) {
+                errorEl.classList.add('hidden');
+                if (result.message) alert(result.message);
+                window.location.href = result.redirect;
+            } else {
+                errorEl.textContent = result.message;
+                errorEl.classList.remove('hidden');
+                const card = document.getElementById('auth-view');
+                card.classList.add('animate-pulse');
+                setTimeout(() => card.classList.remove('animate-pulse'), 500);
+            }
+        }
+    </script>
+</body>
+
+</html>

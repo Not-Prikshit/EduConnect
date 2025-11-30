@@ -1,0 +1,46 @@
+[
+    {
+        "studentId": "newstudent@bennett.edu.in",
+        "studentName": "New Student Test",
+        "teacherId": "adwa.re@bennett.edu.in",
+        "date": "2026-01-02",
+        "time": "09:00",
+        "reason": "Need help with assignment",
+        "status": "approved",
+        "createdAt": "2025-11-28T04:07:30.089Z",
+        "id": "M1764302850"
+    },
+    {
+        "studentId": "S1764090203@bennett.edu.in",
+        "studentName": "Test Student",
+        "teacherId": "dean.sola@bennett.edu.in",
+        "date": "2025-12-01",
+        "time": "16:00",
+        "reason": "Discuss project",
+        "status": "approved",
+        "createdAt": "2025-11-30T17:19:21.432Z",
+        "id": "M1764523161"
+    },
+    {
+        "studentId": "S1764090203@bennett.edu.in",
+        "studentName": "Test Student",
+        "teacherId": "dean.sola@bennett.edu.in",
+        "date": "2025-12-01",
+        "time": "16:00",
+        "reason": "Discuss project",
+        "status": "approved",
+        "createdAt": "2025-11-30T17:34:02.989Z",
+        "id": "M1764524043"
+    },
+    {
+        "studentId": "S1764090203@bennett.edu.in",
+        "studentName": "RUPESH YADAV",
+        "teacherId": "dean.sola@bennett.edu.in",
+        "date": "2025-12-01",
+        "time": "14:00",
+        "reason": "TO DISCUSS REGARDING BU RISE CLASSES",
+        "status": "approved",
+        "createdAt": "2025-11-30T17:40:17.466Z",
+        "id": "M1764524418"
+    }
+]
