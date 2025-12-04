@@ -1,9 +1,0 @@
-# .env - Contains sensitive credentials
-.env
-*.pyc
-__pycache__/
-.venv/
-env/
-venv/
-*.log
-.DS_Store
