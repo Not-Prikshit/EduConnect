@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - NIH Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: { primary: '#6366f1', dark: '#0f172a' }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body
+    class="bg-slate-50 dark:bg-slate-900 min-h-screen font-sans text-slate-800 dark:text-white transition-colors duration-300 flex">
+
+    <!-- Left Fixed Panel -->
+    <aside
+        class="w-80 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 h-screen fixed overflow-y-auto z-30 shadow-xl">
+        <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-indigo-600">NIH Panel</h1>
+            <button onclick="history.back()" class="text-slate-400 hover:text-slate-600">✕</button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex border-b border-slate-100 dark:border-slate-700">
+            <button onclick="switchTab('notice')" id="tab-notice"
+                class="flex-1 py-3 text-sm font-medium text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20">Notice</button>
+            <button onclick="switchTab('info')" id="tab-info"
+                class="flex-1 py-3 text-sm font-medium text-slate-500 hover:text-indigo-600 transition-colors">Info</button>
+            <button onclick="switchTab('help')" id="tab-help"
+                class="flex-1 py-3 text-sm font-medium text-slate-500 hover:text-indigo-600 transition-colors">Help</button>
+        </div>
+
+        <div class="p-6 space-y-6" id="panel-content">
+            <!-- Content injected here -->
+        </div>
+    </aside>
+
+    <!-- Main Content Overlay (Blur Effect) -->
+    <div class="flex-1 ml-80 p-8 opacity-50 pointer-events-none hidden md:block">
+        <div class="max-w-4xl mx-auto text-center mt-20">
+            <h2 class="text-4xl font-bold text-slate-300">NIH Information Center</h2>
+            <p class="text-slate-400 mt-4">Select a category from the left panel to view details.</p>
+        </div>
+    </div>
+
+    <script>
+        const notices = JSON.parse(localStorage.getItem('edu_notices') || '[]');
+
+        function switchTab(tab) {
+            // Update Tab Styles
+            ['notice', 'info', 'help'].forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    el.className = "flex-1 py-3 text-sm font-medium text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20";
+                } else {
+                    el.className = "flex-1 py-3 text-sm font-medium text-slate-500 hover:text-indigo-600 transition-colors";
+                }
+            });
+
+            const content = document.getElementById('panel-content');
+
+            if (tab === 'notice') {
+                content.innerHTML = notices.map(n => `
+                    <div class="bg-white dark:bg-slate-700 p-4 rounded-lg shadow-sm border-l-4 ${n.type === 'urgent' ? 'border-rose-500' : 'border-indigo-500'}">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-slate-800 dark:text-white">${n.title}</h3>
+                            ${n.type === 'urgent' ? '<span class="text-xs bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full">Urgent</span>' : ''}
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 mb-2">${n.content}</p>
+                        <p class="text-xs text-slate-400">${n.date}</p>
+                    </div>
+                `).join('');
+            } else if (tab === 'info') {
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-lg">
+                            <h3 class="font-bold mb-2">About Institution</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">EduConnect High School is dedicated to excellence in education since 1990.</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-lg">
+                            <h3 class="font-bold mb-2">Academic Calendar</h3>
+                            <ul class="text-sm text-slate-600 dark:text-slate-300 list-disc pl-4 space-y-1">
+                                <li>Term 1: June - Oct</li>
+                                <li>Term 2: Nov - March</li>
+                                <li>Summer Break: April - May</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            } else if (tab === 'help') {
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-lg">
+                            <h3 class="font-bold mb-2 text-indigo-700 dark:text-indigo-300">Support Chatbot</h3>
+                            <div class="h-32 bg-white dark:bg-slate-800 rounded border border-indigo-100 dark:border-indigo-800 p-2 overflow-y-auto text-xs space-y-2 mb-2">
+                                <div class="bg-slate-100 dark:bg-slate-700 p-2 rounded-lg rounded-tl-none inline-block max-w-[80%]">Hello! How can I help you today?</div>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Type..." class="flex-1 text-sm p-2 rounded border border-indigo-200 dark:border-indigo-700 bg-white dark:bg-slate-800">
+                                <button class="bg-indigo-600 text-white p-2 rounded">></button>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-lg">
+                            <h3 class="font-bold mb-2">Contact Admin</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Email: admin@educonnect.com</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Phone: +91 98765 43210</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Default
+        switchTab('notice');
+    </script>
+</body>
+
+</html>

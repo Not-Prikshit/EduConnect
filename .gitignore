@@ -1,0 +1,17 @@
+# Virtual Environments
+env/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Backend Data (Optional: exclude if you don't want to push local data)
+# backend/data/*.json
